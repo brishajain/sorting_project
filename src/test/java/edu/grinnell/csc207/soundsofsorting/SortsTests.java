@@ -8,7 +8,6 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
 
-import edu.grinnell.csc207.soundsofsorting.Sorts;
 import edu.grinnell.csc207.soundsofsorting.events.SortEvent;
 
 public class SortsTests {

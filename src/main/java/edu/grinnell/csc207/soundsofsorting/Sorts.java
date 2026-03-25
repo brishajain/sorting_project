@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import edu.grinnell.csc207.soundsofsorting.events.*;
+import edu.grinnell.csc207.soundsofsorting.events.SortEvent;
 
 /**
  * A collection of sorting algorithms.
@@ -37,8 +37,14 @@ public class Sorts {
         int length = arr.length;
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < length - i - 1; j++) {
+                events.add(new CompareEvent(j, j + 1)); 
+                //is this correct addition of event to a list???
                 if (arr[j].compareTo(arr[j + 1]) > 0)
+                {
+                    events.add(SwapEvent (j, j + 1));
+                    //is this correct addition of event to a list???
                     swap(arr, j, j + 1);
+                }
             }
         }
         return events;
@@ -59,10 +65,13 @@ public class Sorts {
          for (int j = 0; j < arr.length; j++) {
             int tracker = j; // tracks largest element in unsorted region
             for (int i = j + 1; i < arr.length; i++) {
+
+                //add compare event
                 if (arr[tracker].compareTo(arr[i]) > 0) {
                     tracker = i; // store new largest element in unsorted region
                 }
             }
+            //add swap event
             swap(arr, tracker, j);
         }
         return events;
@@ -83,12 +92,14 @@ public class Sorts {
         for (int j = 0; j < arr.length; j++) {
             int i = 0;
             for (; i < j; i++) {
+                //add compare event
                 if (arr[i].compareTo(arr[j]) > 0)
                     break;
             }
             T hold = arr[j];
             for (int w = j; w > i; w--) // shifts all elements between i and j to the right
             {
+                //add swap event 
                 swap(arr, w, w - 1);
             }
             arr[i] = hold; // moves element at j to i
@@ -125,22 +136,28 @@ public static <T extends Comparable<? super T>> void mergehelp(
     int shadowIn = beg;
 
     while (leftIn < mid && rightIn < end) {
+        //add compare event
         if (arr[leftIn].compareTo(arr[rightIn]) <= 0) {
+            //add copy event
             shadow[shadowIn++] = arr[leftIn++];
         } else {
+            //add copy event
             shadow[shadowIn++] = arr[rightIn++];
         }
     }
 
     while (leftIn < mid) {
+        //add copy event
         shadow[shadowIn++] = arr[leftIn++];
     }
 
     while (rightIn < end) {
+        //add copy event
         shadow[shadowIn++] = arr[rightIn++];
     }
 
     for (int i = beg; i < end; i++) {
+        //add copy event??
         arr[i] = shadow[i];
     }
 }
@@ -164,28 +181,30 @@ public static <T extends Comparable<? super T>> void quickSort_help(T[] arr, int
     }
 
     int mid = (beg + end) / 2;
-    swap(arr, mid, end);   // move pivot to end
+    //add swap event
+    swap(arr, mid, end);   // moves pivot value to end
 
     int leftpoint = beg;
     int rightpoint = end - 1;
 
     while (leftpoint <= rightpoint) {
 
-        while (leftpoint <= rightpoint &&
+        while (leftpoint <= rightpoint && //add compare event
                arr[leftpoint].compareTo(arr[end]) < 0) {
             leftpoint++;
         }
 
-        while (leftpoint <= rightpoint &&
+        while (leftpoint <= rightpoint && //add compare event
                arr[rightpoint].compareTo(arr[end]) >= 0) {
             rightpoint--;
         }
 
         if (leftpoint < rightpoint) {
+            //add swap event
             swap(arr, leftpoint++, rightpoint--);
         }
     }
-
+    //add swap event
     swap(arr, leftpoint, end);  // put pivot in correct place
 
     quickSort_help(arr, beg, leftpoint - 1);
@@ -199,5 +218,6 @@ public static <T extends Comparable<? super T>> void quickSort_help(T[] arr, int
     public static <T extends Comparable<? super T>> void eventSort(
         List<SortEvent<T>> events, T[] arr) {
         // TODO: implement me!
+        //itterate over each value in events and apply that value to the input array
     }
 }
